@@ -6,13 +6,13 @@ body {
   color: #1a1a1a;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 h1, h2, h3 {
   font-weight: 600;
   text-align: center;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 /* 🔝 Sticky Navbar */
@@ -27,13 +27,11 @@ html {
   gap: 20px;
   z-index: 1000;
 }
-
 .navbar a {
   color: white;
   text-decoration: none;
   font-weight: bold;
 }
-
 .navbar a:hover {
   text-decoration: underline;
 }
@@ -48,48 +46,31 @@ html {
   align-items: center;
   flex-wrap: wrap;
 }
-
 .hero img {
   height: 250px;
   margin: 10px;
 }
-
 .hero-text {
   max-width: 400px;
   text-align: center;
 }
-
 .hero-text h1 {
   font-size: 3.5em;
   letter-spacing: 2px;
 }
-
 .tagline {
   font-style: italic;
   margin-bottom: 20px;
   font-size: 1.3em;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 1em;
-  background: none;
-  border: 1px solid #fff;
-  color: #fff;
-  cursor: pointer;
+/* 🔍 Zoomable Images */
+.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
 }
-
-button:hover {
-  background: #fff;
-  color: #000;
-}
-
-/* 📖 About Section */
-.about {
-  padding: 60px 20px;
-  text-align: center;
-  max-width: 800px;
-  margin: auto;
+.zoomable:hover {
+  transform: scale(1.1);
 }
 
 /* 🛒 Products Section */
@@ -97,7 +78,6 @@ button:hover {
   padding: 60px 20px;
   text-align: center;
 }
-
 .product-list {
   display: flex;
   justify-content: space-around;
@@ -105,7 +85,6 @@ button:hover {
   gap: 30px;
   margin-top: 30px;
 }
-
 .product {
   background: #fff;
   padding: 20px;
@@ -113,17 +92,14 @@ button:hover {
   width: 250px;
   border-radius: 10px;
 }
-
 .product img {
   width: 100%;
   height: auto;
   margin-bottom: 15px;
 }
-
 .product h3 {
   margin-top: 10px;
 }
-
 .product p {
   font-size: 0.9em;
   color: #555;
@@ -133,62 +109,18 @@ button:hover {
 .heat-meter {
   margin-top: 10px;
 }
-
 .pepper {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-image: url('/images/pepper-icon.svg'); /* Swap with PNG if needed */
+  background-image: url('/images/pepper-icon.svg');
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.3;
   margin-right: 4px;
 }
-
 .pepper.full {
   opacity: 1;
-}
-
-/* 🔍 Zoomable Images */
-.zoomable {
-  cursor: zoom-in;
-  transition: transform 0.3s ease;
-}
-
-.zoomable:hover {
-  transform: scale(1.1);
-}
-
-/* 🖼 Modal Preview */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  padding-top: 60px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  max-width: 90%;
-  max-height: 80%;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-.close {
-  position: absolute;
-  top: 30px;
-  right: 50px;
-  color: white;
-  font-size: 40px;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 /* 🔥 Flame Club CTA */
@@ -198,18 +130,15 @@ button:hover {
   text-align: center;
   padding: 60px 20px;
 }
-
 .flame-club h2 {
   font-size: 2.2em;
   margin-bottom: 10px;
 }
-
 .flame-club p {
   max-width: 600px;
   margin: auto;
   font-size: 1.1em;
 }
-
 .flame-club button {
   margin-top: 20px;
   padding: 12px 24px;
@@ -218,8 +147,8 @@ button:hover {
   border: 2px solid #fff;
   color: #fff;
   cursor: pointer;
+  border-radius: 6px;
 }
-
 .flame-club button:hover {
   background: #fff;
   color: #000;
@@ -231,16 +160,13 @@ button:hover {
   text-align: center;
   background: #f6f6f2;
 }
-
 .testimonials h2 {
   margin-bottom: 30px;
 }
-
 .testimonial-container {
   position: relative;
   height: 100px;
 }
-
 .testimonial {
   position: absolute;
   opacity: 0;
@@ -252,7 +178,6 @@ button:hover {
   font-style: italic;
   font-size: 1.2em;
 }
-
 .testimonial.active {
   opacity: 1;
 }
@@ -264,7 +189,6 @@ button:hover {
   gap: 10px;
   margin: 20px 0;
 }
-
 .filter-buttons button {
   padding: 10px 16px;
   border: none;
@@ -275,132 +199,130 @@ button:hover {
   border-radius: 4px;
   transition: background 0.3s ease;
 }
-
 .filter-buttons button:hover {
   background: #d62828;
 }
-/* 🧠 Premium Flavor Quiz Modal */
-.quiz-modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0; top: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(0,0,0,0.9), rgba(0,0,0,0.95));
-  overflow-y: auto;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px 20px;
-}
 
-.quiz-content {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 15px;
-  padding: 30px 20px;
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  margin: auto;
-  animation: fadeUp 0.4s ease-out;
-}
-
-@keyframes fadeUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.quiz-content h2 {
-  margin-bottom: 20px;
-  font-size: 1.8em;
-  font-weight: bold;
-}
-
-.quiz-step {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.quiz-step p {
-  margin-bottom: 10px;
-  font-weight: 600;
-  font-size: 1.1em;
-}
-
-.quiz-step label {
-  display: block;
-  margin: 8px 0;
-  background: rgba(255,255,255,0.1);
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.quiz-step label:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.quiz-step input {
-  margin-right: 10px;
-}
-
-.quiz-content button[type="submit"] {
-  display: inline-block;
-  margin-top: 20px;
-  background: #ffd700;
-  color: #111;
-  font-weight: bold;
-  padding: 14px 30px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.quiz-content button[type="submit"]:hover {
-  background: #ffa500;
-  color: #fff;
-}
-
-.quiz-result {
-  animation: fadeUp 0.5s ease;
-  color: #fff;
-  margin-top: 20px;
-}
-
-.quiz-result h3 {
-  font-size: 1.5em;
-  color: #ffd700;
-}
-
-.quiz-result p {
-  font-size: 1em;
-  margin: 10px 0 20px;
-}
-
-.quiz-result img {
-  margin-top: 10px;
-  border-radius: 12px;
-  max-height: 200px;
-}
-
-/* CTA Section */
+/* 🎯 Quiz CTA Section */
 .quiz-cta {
   background: linear-gradient(to right, #fceabb, #f8b500);
   text-align: center;
   padding: 60px 20px;
   color: #111;
 }
-
 .quiz-cta h2 {
   font-size: 2.2em;
   margin-bottom: 10px;
 }
-
 .quiz-cta button {
-  padding: 12p
+  padding: 14px 30px;
+  font-size: 1.1em;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.quiz-cta button:hover {
+  background: #d62828;
+}
+
+/* 🧠 Multi-Step Quiz Modal Styles */
+.quiz-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  z-index: 10000;
+}
+.quiz-content {
+  background: #fff;
+  color: #111;
+  max-width: 500px;
+  width: 90%;
+  margin: 60px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  position: relative;
+  animation: fadeIn 0.4s ease-out;
+}
+.quiz-content .close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+.quiz-step {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+.quiz-step.active {
+  display: flex;
+}
+.quiz-step h3 {
+  margin-bottom: 10px;
+}
+.quiz-step label {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.quiz-step label:hover {
+  background: #f5f5f5;
+}
+.quiz-step input {
+  margin-right: 8px;
+}
+.quiz-step button {
+  margin-top: 20px;
+  padding: 12px;
+  border: none;
+  background: #000;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* 🎉 Result Styles */
+.quiz-result {
+  text-align: center;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+.quiz-result h3 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+.quiz-result img {
+  margin-top: 20px;
+  max-height: 200px;
+  border-radius: 8px;
+}
+.quiz-result button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  border: none;
+  background: #000;
+  color: #fff;
+  font-size: 1em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 💡 Utility & Animations */
+.hidden { display: none; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
