@@ -279,3 +279,70 @@ button:hover {
 .filter-buttons button:hover {
   background: #d62828;
 }
+/* 🧠 Flavor Quiz Modal */
+.quiz-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  color: #111;
+}
+
+.quiz-content h2 {
+  margin-bottom: 20px;
+}
+
+.quiz-step {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.quiz-step p {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.quiz-step label {
+  display: block;
+  margin: 5px 0;
+}
+
+.quiz-result.hidden {
+  display: none;
+}
+
+.quiz-result h3 {
+  margin-top: 0;
+  font-size: 1.6em;
+  color: #d62828;
+}
+
+.quiz-result p {
+  margin: 10px 0 20px;
+}
+
+/* Quiz CTA button section */
+.quiz-cta {
+  background: #fff3eb;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.quiz-cta h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}

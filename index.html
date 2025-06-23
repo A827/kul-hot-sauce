@@ -7,6 +7,75 @@
   <link rel="stylesheet" href="styles/styles.css" />
   <link rel="icon" href="/favicon.png" type="image/png" />
 </head>
+<!-- 🔥 Flavor Match Quiz Button -->
+<section class="quiz-cta">
+  <h2>Which Sauce Matches You?</h2>
+  <button onclick="openQuiz()">Take the Flavor Quiz</button>
+</section>
+
+<!-- 🎯 Quiz Modal -->
+<div id="quizModal" class="modal quiz-modal">
+  <div class="quiz-content">
+    <span class="close" onclick="closeQuiz()">&times;</span>
+    <h2>Find Your Flavor Match</h2>
+    <form id="quizForm">
+      <div class="quiz-step">
+        <p>1. How spicy do you like it?</p>
+        <label><input type="radio" name="spice" value="mild" required /> Mild</label><br/>
+        <label><input type="radio" name="spice" value="medium" /> Medium</label><br/>
+        <label><input type="radio" name="spice" value="hot" /> Bring the heat 🔥</label>
+      </div>
+      <div class="quiz-step">
+        <p>2. Favorite snack?</p>
+        <label><input type="radio" name="snack" value="sweet" required /> Something sweet</label><br/>
+        <label><input type="radio" name="snack" value="salty" /> Salty/crunchy</label><br/>
+        <label><input type="radio" name="snack" value="sour" /> Sour & spicy</label>
+      </div>
+      <div class="quiz-step">
+        <p>3. Your spice confidence?</p>
+        <label><input type="radio" name="conf" value="low" required /> I’m cautious 🌿</label><br/>
+        <label><input type="radio" name="conf" value="mid" /> I like a lil’ kick 🔸</label><br/>
+        <label><input type="radio" name="conf" value="high" /> I fear no flame 🔥</label>
+      </div>
+      <button type="submit">Reveal My Match</button>
+    </form>
+    <div id="quizResult" class="quiz-result hidden"></div>
+  </div>
+</div>
+
+<script>
+function openQuiz() {
+  document.getElementById("quizModal").style.display = "flex";
+}
+function closeQuiz() {
+  document.getElementById("quizModal").style.display = "none";
+  document.getElementById("quizForm").style.display = "block";
+  document.getElementById("quizResult").classList.add("hidden");
+}
+
+document.getElementById("quizForm").onsubmit = function(e) {
+  e.preventDefault();
+  const spice = document.querySelector('input[name="spice"]:checked').value;
+  const conf = document.querySelector('input[name="conf"]:checked').value;
+  let match = "sweet-chili";
+  if (spice === "hot" || conf === "high") match = "cayenne";
+  else if (spice === "medium" || conf === "mid") match = "jalapeno";
+
+  let name = match === "cayenne" ? "🔥 Cayenne" :
+             match === "jalapeno" ? "🌶️ Jalapeño" :
+             "🧁 Sweet Chili";
+
+  document.getElementById("quizForm").style.display = "none";
+  document.getElementById("quizResult").classList.remove("hidden");
+  document.getElementById("quizResult").innerHTML = `
+    <h3>You matched with <span>${name}</span>!</h3>
+    <img src="/images/${match}.png" alt="${name}" style="max-height:180px;" />
+    <p>Spice level that suits your soul 🔥</p>
+    <button onclick="closeQuiz()">Close</button>
+  `;
+}
+</script>
+
 <body>
 
   <!-- 🔝 Sticky Navigation Bar -->
