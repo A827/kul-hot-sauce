@@ -279,7 +279,7 @@ button:hover {
 .filter-buttons button:hover {
   background: #d62828;
 }
-/* 🧠 Flavor Quiz Modal */
+/* 🧠 Premium Flavor Quiz Modal */
 .quiz-modal {
   display: none;
   position: fixed;
@@ -287,23 +287,34 @@ button:hover {
   left: 0; top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.95);
+  background: radial-gradient(circle, rgba(0,0,0,0.9), rgba(0,0,0,0.95));
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(6px);
 }
 
 .quiz-content {
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 15px;
+  padding: 30px 20px;
   max-width: 500px;
+  width: 90%;
   text-align: center;
-  color: #111;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  animation: fadeUp 0.4s ease-out;
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .quiz-content h2 {
   margin-bottom: 20px;
+  font-size: 1.8em;
+  font-weight: bold;
 }
 
 .quiz-step {
@@ -313,36 +324,80 @@ button:hover {
 
 .quiz-step p {
   margin-bottom: 10px;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 1.1em;
 }
 
 .quiz-step label {
   display: block;
-  margin: 5px 0;
+  margin: 8px 0;
+  background: rgba(255,255,255,0.1);
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.quiz-result.hidden {
-  display: none;
+.quiz-step label:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.quiz-step input {
+  margin-right: 10px;
+}
+
+.quiz-content button {
+  margin-top: 10px;
+  padding: 12px 24px;
+  font-size: 1em;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.quiz-content button:hover {
+  background: #d62828;
+  color: #fff;
+}
+
+.quiz-result {
+  animation: fadeUp 0.5s ease;
+  color: #fff;
+  margin-top: 20px;
 }
 
 .quiz-result h3 {
-  margin-top: 0;
-  font-size: 1.6em;
-  color: #d62828;
+  font-size: 1.5em;
+  color: #ffd700;
 }
 
 .quiz-result p {
+  font-size: 1em;
   margin: 10px 0 20px;
 }
 
-/* Quiz CTA button section */
+.quiz-result img {
+  margin-top: 10px;
+  border-radius: 12px;
+  max-height: 200px;
+}
+
+/* CTA Section */
 .quiz-cta {
-  background: #fff3eb;
+  background: linear-gradient(to right, #fceabb, #f8b500);
   text-align: center;
   padding: 60px 20px;
+  color: #111;
 }
 
 .quiz-cta h2 {
-  font-size: 2em;
+  font-size: 2.2em;
   margin-bottom: 10px;
 }
+
+.quiz-cta button {
+  padding: 12p
