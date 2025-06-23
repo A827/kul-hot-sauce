@@ -9,13 +9,13 @@
 </head>
 <body>
 
-  <!-- 🔥 Sticky Navigation Bar -->
+  <!-- 🔝 Sticky Navigation Bar -->
   <nav class="navbar">
     <a href="#about">About</a>
     <a href="#products">Products</a>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- 🏁 Hero Section -->
   <section class="hero">
     <div class="hero-text">
       <h1>KÜL</h1>
@@ -28,7 +28,7 @@
     </div>
   </section>
 
-  <!-- About Section -->
+  <!-- 📖 About Section -->
   <section id="about" class="about">
     <h2>About</h2>
     <p>
@@ -37,77 +37,69 @@
     </p>
   </section>
 
-  <!-- Products Section -->
+  <!-- 🛒 Products Section -->
   <section id="products" class="products">
     <h2>Our Products</h2>
+
+    <!-- 🌶️ Flavor Filter -->
+    <div class="filter-buttons">
+      <button onclick="filterProducts('all')">All</button>
+      <button onclick="filterProducts('mild')">Mild</button>
+      <button onclick="filterProducts('medium')">Medium</button>
+      <button onclick="filterProducts('hot')">Hot</button>
+    </div>
+
     <div class="product-list">
 
-      <div class="product">
+      <div class="product" data-heat="hot">
         <img src="/images/cayenne.png" alt="Cayenne Sauce" class="zoomable" onclick="openModal('/images/cayenne.png')" />
         <h3>KÜL Cayenne Hot Sauce</h3>
         <p>Fiery and tangy, with a classic cayenne pepper heat.</p>
         <div class="heat-meter">
-          <span class="pepper full"></span>
-          <span class="pepper full"></span>
-          <span class="pepper full"></span>
+          <span class="pepper full"></span><span class="pepper full"></span><span class="pepper full"></span>
         </div>
         <button>Buy Now</button>
       </div>
 
-      <div class="product">
+      <div class="product" data-heat="mild">
         <img src="/images/sweet-chili.png" alt="Sweet Chili Sauce" class="zoomable" onclick="openModal('/images/sweet-chili.png')" />
         <h3>KÜL Sweet Chili Sauce</h3>
         <p>Sweet and mild, with a touch of tangy chili flavor.</p>
         <div class="heat-meter">
-          <span class="pepper full"></span>
-          <span class="pepper empty"></span>
-          <span class="pepper empty"></span>
+          <span class="pepper full"></span><span class="pepper empty"></span><span class="pepper empty"></span>
         </div>
         <button>Buy Now</button>
       </div>
 
-      <div class="product">
+      <div class="product" data-heat="medium">
         <img src="/images/jalapeno.png" alt="Jalapeño Sauce" class="zoomable" onclick="openModal('/images/jalapeno.png')" />
         <h3>KÜL Jalapeño Sauce</h3>
         <p>Vibrant and zesty with a bright jalapeño kick.</p>
         <div class="heat-meter">
-          <span class="pepper full"></span>
-          <span class="pepper full"></span>
-          <span class="pepper empty"></span>
+          <span class="pepper full"></span><span class="pepper full"></span><span class="pepper empty"></span>
         </div>
         <button>Buy Now</button>
       </div>
 
     </div>
   </section>
+
   <!-- 🔥 Flame Club CTA -->
-<section class="flame-club">
-  <h2>🔥 Join the Flame Club</h2>
-  <p>Be the first to taste new sauces, get exclusive drops and spice-fueled perks.</p>
-  <button>Notify Me</button>
-</section>
+  <section class="flame-club">
+    <h2>🔥 Join the Flame Club</h2>
+    <p>Be the first to taste new sauces, get exclusive drops and spice-fueled perks.</p>
+    <button>Notify Me</button>
+  </section>
 
-<!-- 💬 Testimonials -->
-<section class="testimonials">
-  <h2>What People Are Saying</h2>
-  <div class="testimonial-container">
-    <blockquote class="testimonial active">“KÜL is the gold standard of modern hot sauce.”</blockquote>
-    <blockquote class="testimonial">“This sauce elevated every meal — I’m obsessed.”</blockquote>
-    <blockquote class="testimonial">“Balanced, bold, and beautifully packaged. Must-have!”</blockquote>
-  </div>
-</section>
-
-<script>
-  // Simple quote rotator
-  let current = 0;
-  const quotes = document.querySelectorAll('.testimonial');
-  setInterval(() => {
-    quotes[current].classList.remove('active');
-    current = (current + 1) % quotes.length;
-    quotes[current].classList.add('active');
-  }, 4000);
-</script>
-
+  <!-- 💬 Testimonials -->
+  <section class="testimonials">
+    <h2>What People Are Saying</h2>
+    <div class="testimonial-container">
+      <blockquote class="testimonial active">“KÜL is the gold standard of modern hot sauce.”</blockquote>
+      <blockquote class="testimonial">“This sauce elevated every meal — I’m obsessed.”</blockquote>
+      <blockquote class="testimonial">“Balanced, bold, and beautifully packaged. Must-have!”</blockquote>
+    </div>
+  </section>
 
   <!-- 🔍 Modal Preview -->
   <div id="imgModal" class="modal" onclick="closeModal()">
@@ -116,6 +108,7 @@
   </div>
 
   <script>
+    // 🔍 Modal Image
     function openModal(src) {
       const modal = document.getElementById("imgModal");
       const modalImg = document.getElementById("modalImg");
@@ -125,6 +118,24 @@
 
     function closeModal() {
       document.getElementById("imgModal").style.display = "none";
+    }
+
+    // 💬 Testimonial Rotator
+    let current = 0;
+    const quotes = document.querySelectorAll('.testimonial');
+    setInterval(() => {
+      quotes[current].classList.remove('active');
+      current = (current + 1) % quotes.length;
+      quotes[current].classList.add('active');
+    }, 4000);
+
+    // 🌶️ Filter by Heat Level
+    function filterProducts(level) {
+      const products = document.querySelectorAll('.product');
+      products.forEach(product => {
+        const heat = product.getAttribute('data-heat');
+        product.style.display = (level === 'all' || heat === level) ? 'block' : 'none';
+      });
     }
   </script>
 
