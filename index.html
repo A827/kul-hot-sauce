@@ -5,9 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>KÜL Hot Sauce</title>
   <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
 </head>
 <body>
 
+  <!-- 🔥 Sticky Navigation Bar -->
+  <nav class="navbar">
+    <a href="#about">About</a>
+    <a href="#products">Products</a>
+  </nav>
+
+  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-text">
       <h1>KÜL</h1>
@@ -15,12 +23,13 @@
       <button>Explore Flavors</button>
     </div>
     <div class="hero-img">
-      <img src="/images/cayenne.png" alt="KÜL Cayenne" />
-      <img src="/images/sweet-chili.png" alt="KÜL Sweet Chili" />
+      <img src="/images/cayenne.png" alt="KÜL Cayenne" class="zoomable" onclick="openModal('/images/cayenne.png')" />
+      <img src="/images/sweet-chili.png" alt="KÜL Sweet Chili" class="zoomable" onclick="openModal('/images/sweet-chili.png')" />
     </div>
   </section>
 
-  <section class="about">
+  <!-- About Section -->
+  <section id="about" class="about">
     <h2>About</h2>
     <p>
       KÜL crafts bold, honest, and naturally fiery sauces that ignite flavor without compromising quality. 
@@ -28,29 +37,68 @@
     </p>
   </section>
 
-  <section class="products">
+  <!-- Products Section -->
+  <section id="products" class="products">
     <h2>Our Products</h2>
     <div class="product-list">
+
       <div class="product">
-        <img src="/images/cayenne.png" alt="Cayenne Sauce" />
+        <img src="/images/cayenne.png" alt="Cayenne Sauce" class="zoomable" onclick="openModal('/images/cayenne.png')" />
         <h3>KÜL Cayenne Hot Sauce</h3>
         <p>Fiery and tangy, with a classic cayenne pepper heat.</p>
+        <div class="heat-meter">
+          <span class="pepper full"></span>
+          <span class="pepper full"></span>
+          <span class="pepper full"></span>
+        </div>
         <button>Buy Now</button>
       </div>
+
       <div class="product">
-        <img src="/images/sweet-chili.png" alt="Sweet Chili Sauce" />
-        <h3>KÜL Sweet Chill Sauce</h3>
+        <img src="/images/sweet-chili.png" alt="Sweet Chili Sauce" class="zoomable" onclick="openModal('/images/sweet-chili.png')" />
+        <h3>KÜL Sweet Chili Sauce</h3>
         <p>Sweet and mild, with a touch of tangy chili flavor.</p>
+        <div class="heat-meter">
+          <span class="pepper full"></span>
+          <span class="pepper empty"></span>
+          <span class="pepper empty"></span>
+        </div>
         <button>Buy Now</button>
       </div>
+
       <div class="product">
-        <img src="/images/jalapeno.png" alt="Jalapeño Sauce" />
+        <img src="/images/jalapeno.png" alt="Jalapeño Sauce" class="zoomable" onclick="openModal('/images/jalapeno.png')" />
         <h3>KÜL Jalapeño Sauce</h3>
         <p>Vibrant and zesty with a bright jalapeño kick.</p>
+        <div class="heat-meter">
+          <span class="pepper full"></span>
+          <span class="pepper full"></span>
+          <span class="pepper empty"></span>
+        </div>
         <button>Buy Now</button>
       </div>
+
     </div>
   </section>
+
+  <!-- 🔍 Modal Preview -->
+  <div id="imgModal" class="modal" onclick="closeModal()">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImg">
+  </div>
+
+  <script>
+    function openModal(src) {
+      const modal = document.getElementById("imgModal");
+      const modalImg = document.getElementById("modalImg");
+      modal.style.display = "flex";
+      modalImg.src = src;
+    }
+
+    function closeModal() {
+      document.getElementById("imgModal").style.display = "none";
+    }
+  </script>
 
 </body>
 </html>
