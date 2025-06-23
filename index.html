@@ -80,6 +80,34 @@
 
     </div>
   </section>
+  <!-- 🔥 Flame Club CTA -->
+<section class="flame-club">
+  <h2>🔥 Join the Flame Club</h2>
+  <p>Be the first to taste new sauces, get exclusive drops and spice-fueled perks.</p>
+  <button>Notify Me</button>
+</section>
+
+<!-- 💬 Testimonials -->
+<section class="testimonials">
+  <h2>What People Are Saying</h2>
+  <div class="testimonial-container">
+    <blockquote class="testimonial active">“KÜL is the gold standard of modern hot sauce.”</blockquote>
+    <blockquote class="testimonial">“This sauce elevated every meal — I’m obsessed.”</blockquote>
+    <blockquote class="testimonial">“Balanced, bold, and beautifully packaged. Must-have!”</blockquote>
+  </div>
+</section>
+
+<script>
+  // Simple quote rotator
+  let current = 0;
+  const quotes = document.querySelectorAll('.testimonial');
+  setInterval(() => {
+    quotes[current].classList.remove('active');
+    current = (current + 1) % quotes.length;
+    quotes[current].classList.add('active');
+  }, 4000);
+</script>
+
 
   <!-- 🔍 Modal Preview -->
   <div id="imgModal" class="modal" onclick="closeModal()">
