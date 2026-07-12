@@ -1,0 +1,159 @@
+{
+  "theme": {
+    "bg": "#0a0908",
+    "ink": "#f6efe4",
+    "ember": "#ff5a1f",
+    "ember2": "#ff8a3d",
+    "flame": "#ff3b2e",
+    "deepRed": "#b3121a",
+    "amber": "#f4a83f"
+  },
+  "brand": {
+    "name": "kül",
+    "navCta": "Shop Sauces",
+    "links": [
+      { "label": "Story", "href": "#story" },
+      { "label": "Sauces", "href": "#sauces" },
+      { "label": "Heat", "href": "#heat" },
+      { "label": "Craft", "href": "#make" }
+    ]
+  },
+  "hero": {
+    "eyebrow": "Small-batch · Fire-roasted · Anatolian roots",
+    "title": "kül",
+    "tagline": "Born from fire.",
+    "taglineEm": "Bottled from ash.",
+    "sub": "Peppers charred over open flame, smoked low and slow, then aged until the heat turns quiet and deep. Four sauces. One obsession with smoke.",
+    "cta1": "Meet the Sauces →",
+    "cta2": "Our Story"
+  },
+  "marquee": [
+    "Fire-Roasted",
+    "No Additives",
+    "Aged in Small Batches",
+    "Vegan & Gluten-Free",
+    "Smoke, Char & Slow Heat"
+  ],
+  "story": {
+    "eyebrow": "The Origin",
+    "heading": "We chase the ember, not the burn.",
+    "paras": [
+      "**kül** — the Turkish word for *ash* — started on a rooftop grill, blistering peppers until their skins went black and their sugars turned to smoke.",
+      "Most hot sauces shout. Ours smoulders. We roast every pepper over live fire, fold in charred garlic and toasted spice, then let the batch rest until the heat settles into something you can actually taste. **No thickeners, no shortcuts, no gimmicks.**",
+      "Bottled by hand in runs of a few hundred at a time — because the good stuff can't be rushed."
+    ],
+    "stats": [
+      { "value": "100%", "label": "Fire-roasted peppers" },
+      { "value": "48h", "label": "Slow-smoked & aged" },
+      { "value": "0", "label": "Artificial anything" }
+    ]
+  },
+  "products": {
+    "eyebrow": "The Lineup",
+    "heading": "Four sauces, one fire",
+    "sub": "From a gentle glow to a slow-building inferno. Each is roasted, smoked, and bottled by hand.",
+    "unit": "150ml",
+    "items": [
+      {
+        "name": "Ember",
+        "type": "Smoked Paprika & Chipotle",
+        "label": "#f4a83f",
+        "heat": 1,
+        "scoville": 2500,
+        "price": 12,
+        "notes": "The gentle one. Sweet smoke, a whisper of chipotle, warmth that lingers. Goes on everything."
+      },
+      {
+        "name": "Cinder",
+        "type": "Aleppo & Roasted Red",
+        "label": "#ff8a3d",
+        "heat": 2,
+        "scoville": 15000,
+        "price": 13,
+        "notes": "Earthy Aleppo pepper meets fire-blistered reds. Fruity up front, a proper warm hum on the finish."
+      },
+      {
+        "name": "Ash",
+        "type": "Charred Habanero & Black Garlic",
+        "label": "#ff5a1f",
+        "heat": 3,
+        "scoville": 55000,
+        "price": 14,
+        "notes": "Where it gets serious. Tropical habanero, umami-deep black garlic, smoke that sticks around."
+      },
+      {
+        "name": "Kül Noir",
+        "type": "Ghost Pepper & Activated Charcoal",
+        "label": "#b3121a",
+        "heat": 4,
+        "scoville": 275000,
+        "price": 16,
+        "notes": "Jet-black and reckless. Ghost pepper heat wrapped in charcoal smoke. Respect the drop count."
+      }
+    ]
+  },
+  "heat": {
+    "eyebrow": "Know Your Burn",
+    "heading": "The heat scale",
+    "sub": "Measured in Scoville Heat Units. Bars are drawn on a log scale so you can actually see where the gentle glow ends and the trouble begins.",
+    "legend": ["Mild glow", "Warm", "Serious", "Reckless"]
+  },
+  "craft": {
+    "eyebrow": "The Craft",
+    "heading": "How we build the smoke",
+    "pillars": [
+      {
+        "title": "Live-fire roasting",
+        "body": "Every pepper is blistered over open flame until the skins char and the flesh sweetens. That black edge is where the flavour lives."
+      },
+      {
+        "title": "Low & slow smoke",
+        "body": "We cold-smoke the mash over oak and vine cuttings, then age it 48 hours so the heat mellows into something deep and rounded."
+      },
+      {
+        "title": "Bottled by hand",
+        "body": "No factory line. Small runs, filled and labelled by hand, batch-numbered so you know exactly which fire your bottle came from."
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Join the Ember Club",
+    "heading": "Get first dibs on every batch",
+    "sub": "New drops sell out fast. Leave your email and we'll warn you before the next fire — plus 10% off your first order.",
+    "button": "Notify Me"
+  },
+  "footer": {
+    "tagline": "Small-batch smoked hot sauce, born from ash and bottled by hand. Made for people who taste before they sweat.",
+    "columns": [
+      {
+        "title": "Shop",
+        "links": [
+          { "label": "All Sauces", "href": "#sauces" },
+          { "label": "The Full Set", "href": "#sauces" },
+          { "label": "Gift Box", "href": "#sauces" },
+          { "label": "Merch", "href": "#sauces" }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          { "label": "Our Story", "href": "#story" },
+          { "label": "The Craft", "href": "#make" },
+          { "label": "Heat Scale", "href": "#heat" },
+          { "label": "Stockists", "href": "#" }
+        ]
+      },
+      {
+        "title": "Support",
+        "links": [
+          { "label": "Shipping", "href": "#" },
+          { "label": "Returns", "href": "#" },
+          { "label": "FAQ", "href": "#" },
+          { "label": "Contact", "href": "#" }
+        ]
+      }
+    ],
+    "copyright": "© 2026 kül hot sauce co. — All rights reserved. Batch by batch.",
+    "socials": { "instagram": "#", "tiktok": "#", "x": "#" }
+  }
+}

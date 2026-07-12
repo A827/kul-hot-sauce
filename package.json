@@ -1,0 +1,13 @@
+{
+  "name": "kul-hot-sauce",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "kül — small-batch hot sauce brand site with a password-protected content studio.",
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.6.1"
+  }
+}

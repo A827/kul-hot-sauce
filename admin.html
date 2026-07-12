@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>kül · studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{--bg:#0d0b0a;--panel:#151110;--panel2:#1c1613;--ink:#f6efe4;--muted:#a99c8d;--ash:#6d665f;--ember:#ff5a1f;--ember2:#ff8a3d;--border:rgba(246,239,228,.1);--border2:rgba(246,239,228,.18);--ok:#3ecf8e;--err:#ff5d5d}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;height:100vh;overflow:hidden}
+  input,textarea,button,select{font-family:inherit}
+  /* ---- login ---- */
+  #login{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(80% 60% at 50% 30%,rgba(255,90,31,.14),transparent 60%),#0a0908;z-index:100}
+  .login-card{width:340px;text-align:center;border:1px solid var(--border);background:var(--panel);border-radius:20px;padding:38px 30px}
+  .login-card .logo{font-family:'Anton',sans-serif;font-size:52px;background:linear-gradient(180deg,#fff5ea,#ff5a1f);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .login-card p{color:var(--muted);font-size:13px;margin:4px 0 22px;letter-spacing:.02em}
+  .login-card input{width:100%;background:#0e0b09;border:1px solid var(--border2);border-radius:10px;padding:13px 15px;color:var(--ink);font-size:15px;outline:none}
+  .login-card input:focus{border-color:var(--ember)}
+  .login-card button{width:100%;margin-top:12px;background:linear-gradient(180deg,var(--ember2),var(--ember));color:#1a0d05;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:13px;border:0;border-radius:10px;padding:14px;cursor:pointer}
+  .login-err{color:var(--err);font-size:13px;margin-top:12px;min-height:18px}
+  /* ---- app ---- */
+  #app{display:none;grid-template-columns:460px 1fr;height:100vh}
+  .side{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--panel);min-width:0}
+  .top{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--panel2)}
+  .top .brand{font-family:'Anton',sans-serif;font-size:24px;display:flex;align-items:center;gap:8px}
+  .top .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ember);box-shadow:0 0 10px var(--ember)}
+  .top .sp{flex:1}
+  .tbtn{background:none;border:1px solid var(--border2);color:var(--ink);border-radius:8px;padding:8px 11px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s}
+  .tbtn:hover{border-color:var(--ember);color:var(--ember2)}
+  .tbtn.primary{background:linear-gradient(180deg,var(--ember2),var(--ember));color:#1a0d05;border:0;font-weight:800}
+  .tbtn.primary:hover{color:#1a0d05;filter:brightness(1.05)}
+  .status{font-size:12px;color:var(--muted);padding:0 16px 0 2px}
+  .status.ok{color:var(--ok)}.status.err{color:var(--err)}.status.busy{color:var(--ember2)}
+  .bar2{display:flex;flex-wrap:wrap;gap:7px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--panel)}
+  .form{flex:1;overflow-y:auto;padding:6px 16px 60px}
+  details{border:1px solid var(--border);border-radius:12px;margin-top:12px;background:var(--panel2);overflow:hidden}
+  details[open]{border-color:var(--border2)}
+  summary{cursor:pointer;padding:13px 15px;font-weight:700;font-size:13px;letter-spacing:.03em;list-style:none;display:flex;align-items:center;gap:9px;user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary .chev{margin-left:auto;color:var(--ash);transition:.2s}
+  details[open] summary .chev{transform:rotate(90deg);color:var(--ember2)}
+  summary .tag{font-size:10px;color:var(--ash);font-weight:600}
+  .sec-body{padding:6px 15px 16px}
+  label.f{display:block;margin-top:11px}
+  label.f .fl{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:600}
+  label.f input,label.f textarea,label.f select{width:100%;background:#0e0b09;border:1px solid var(--border2);border-radius:8px;padding:9px 11px;color:var(--ink);font-size:13px;outline:none;transition:.15s}
+  label.f input:focus,label.f textarea:focus{border-color:var(--ember)}
+  label.f textarea{resize:vertical;min-height:62px;line-height:1.5}
+  .crow{display:flex;gap:8px;align-items:center}
+  .crow input[type=color]{width:42px;height:38px;padding:2px;background:#0e0b09;border:1px solid var(--border2);border-radius:8px;cursor:pointer;flex:none}
+  .crow input.hex{flex:1}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .item{border:1px solid var(--border);border-radius:10px;padding:10px 11px;margin-top:10px;background:var(--panel)}
+  .item .ihead{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+  .item .ititle{font-size:12px;font-weight:700;color:var(--ember2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tools{display:flex;gap:4px}
+  .mini{width:26px;height:26px;border:1px solid var(--border2);background:none;color:var(--muted);border-radius:6px;cursor:pointer;font-size:13px;line-height:1;display:grid;place-items:center;transition:.15s}
+  .mini:hover{border-color:var(--ember);color:var(--ember2)}
+  .mini.del:hover{border-color:var(--err);color:var(--err)}
+  .addbtn{margin-top:10px;width:100%;background:none;border:1px dashed var(--border2);color:var(--muted);border-radius:8px;padding:9px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+  .addbtn:hover{border-color:var(--ember);color:var(--ember2)}
+  .hint{font-size:11px;color:var(--ash);margin-top:7px;line-height:1.5}
+  /* ---- preview ---- */
+  .preview{position:relative;background:#000;display:flex;flex-direction:column;min-width:0}
+  .pv-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--panel2);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted)}
+  .pv-bar .seg{display:flex;border:1px solid var(--border2);border-radius:7px;overflow:hidden}
+  .pv-bar .seg button{background:none;border:0;color:var(--muted);padding:5px 11px;font-size:12px;cursor:pointer}
+  .pv-bar .seg button.on{background:var(--ember);color:#1a0d05;font-weight:700}
+  .pv-wrap{flex:1;overflow:auto;display:flex;justify-content:center;background:#050403;padding:0}
+  #frame{border:0;background:#0a0908;width:100%;height:100%;transition:width .3s,max-width .3s}
+  #frame.mobile{max-width:400px;box-shadow:0 0 0 1px var(--border)}
+  @media(max-width:900px){#app{grid-template-columns:1fr;grid-template-rows:1fr}.preview{display:none}#app.showpv .side{display:none}#app.showpv .preview{display:flex}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <form class="login-card" id="loginForm">
+    <div class="logo">kül</div>
+    <p>studio · content manager</p>
+    <input type="password" id="pw" placeholder="Admin password" autocomplete="current-password" />
+    <button type="submit">Enter Studio</button>
+    <div class="login-err" id="loginErr"></div>
+  </form>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="side">
+    <div class="top">
+      <div class="brand">kül<span class="dot"></span></div>
+      <div class="sp"></div>
+      <span class="status" id="status"></span>
+      <button class="tbtn primary" id="publish">Publish</button>
+    </div>
+    <div class="bar2">
+      <button class="tbtn" id="viewSite">↗ View site</button>
+      <button class="tbtn" id="exportBtn">⬇ Export</button>
+      <button class="tbtn" id="importBtn">⬆ Import</button>
+      <button class="tbtn" id="resetBtn">↺ Reset</button>
+      <button class="tbtn" id="logout">Log out</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" />
+    </div>
+    <div class="form" id="form"></div>
+  </div>
+  <div class="preview">
+    <div class="pv-bar">
+      <span>Live preview</span>
+      <div class="seg" id="deviceSeg">
+        <button data-d="desktop" class="on">Desktop</button>
+        <button data-d="mobile">Mobile</button>
+      </div>
+      <span style="flex:1"></span>
+      <span id="pvNote">updates as you type</span>
+    </div>
+    <div class="pv-wrap"><iframe id="frame" title="preview" sandbox="allow-scripts"></iframe></div>
+  </div>
+</div>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const K = window.KUL;
+  const clone = (o) => JSON.parse(JSON.stringify(o));
+  let content = clone(K.DEFAULT_CONTENT);
+
+  const $ = (id) => document.getElementById(id);
+  const frame = $("frame");
+
+  /* ---------------- preview ---------------- */
+  let pvTimer = null;
+  function preview() {
+    clearTimeout(pvTimer);
+    pvTimer = setTimeout(() => { frame.srcdoc = K.renderDoc(content); }, 180);
+  }
+
+  /* ---------------- element helper ---------------- */
+  function el(tag, props, kids) {
+    const e = document.createElement(tag);
+    props = props || {};
+    for (const k in props) {
+      const v = props[k];
+      if (k === "class") e.className = v;
+      else if (k === "html") e.innerHTML = v;
+      else if (k === "style" && typeof v === "object") Object.assign(e.style, v);
+      else if (k.slice(0, 2) === "on" && typeof v === "function") e.addEventListener(k.slice(2), v);
+      else if (v != null) e.setAttribute(k, v);
+    }
+    (Array.isArray(kids) ? kids : kids != null ? [kids] : []).forEach((k) => {
+      if (k == null) return;
+      e.appendChild(typeof k === "string" ? document.createTextNode(k) : k);
+    });
+    return e;
+  }
+
+  /* ---------------- field builders ---------------- */
+  function text(labelText, value, on, opts) {
+    opts = opts || {};
+    const input = el(opts.multiline ? "textarea" : "input", { type: opts.type || "text" });
+    input.value = value == null ? "" : value;
+    if (opts.placeholder) input.placeholder = opts.placeholder;
+    input.addEventListener("input", () => { on(opts.type === "number" ? (input.value === "" ? 0 : Number(input.value)) : input.value); preview(); });
+    return el("label", { class: "f" }, [el("span", { class: "fl" }, labelText), input]);
+  }
+  function toHex(v) { v = String(v || ""); if (v[0] !== "#") v = "#" + v; return /^#[0-9a-fA-F]{6}$/.test(v) ? v : "#000000"; }
+  function color(labelText, value, on) {
+    const c = el("input", { type: "color" }); c.value = toHex(value);
+    const t = el("input", { type: "text", class: "hex" }); t.value = value;
+    c.addEventListener("input", () => { t.value = c.value; on(c.value); preview(); });
+    t.addEventListener("input", () => { const val = t.value.trim(); if (/^#?[0-9a-fA-F]{6}$/.test(val)) { const hx = val[0] === "#" ? val : "#" + val; c.value = hx; on(hx); preview(); } });
+    return el("label", { class: "f color" }, [el("span", { class: "fl" }, labelText), el("div", { class: "crow" }, [c, t])]);
+  }
+  function tools(arr, idx, rerender, min) {
+    return el("div", { class: "tools" }, [
+      el("button", { class: "mini", type: "button", title: "Move up", onclick: () => { if (idx > 0) { const a = arr[idx - 1]; arr[idx - 1] = arr[idx]; arr[idx] = a; rerender(); } } }, "↑"),
+      el("button", { class: "mini", type: "button", title: "Move down", onclick: () => { if (idx < arr.length - 1) { const a = arr[idx + 1]; arr[idx + 1] = arr[idx]; arr[idx] = a; rerender(); } } }, "↓"),
+      el("button", { class: "mini del", type: "button", title: "Delete", onclick: () => { if (arr.length > (min || 0)) { arr.splice(idx, 1); rerender(); } } }, "✕"),
+    ]);
+  }
+  function section(title, tag, bodyEls, open) {
+    return el("details", open ? { open: "" } : {}, [
+      el("summary", {}, [document.createTextNode(title), el("span", { class: "tag" }, tag || ""), el("span", { class: "chev" }, "▶")]),
+      el("div", { class: "sec-body" }, bodyEls),
+    ]);
+  }
+
+  /* ---------------- form ---------------- */
+  function renderForm() {
+    const f = $("form"); f.innerHTML = "";
+
+    /* THEME */
+    const th = content.theme;
+    f.appendChild(section("Theme colours", "", [
+      el("div", { class: "row2" }, [color("Background", th.bg, v => th.bg = v), color("Text / ink", th.ink, v => th.ink = v)]),
+      el("div", { class: "row2" }, [color("Ember", th.ember, v => th.ember = v), color("Ember light", th.ember2, v => th.ember2 = v)]),
+      el("div", { class: "row2" }, [color("Flame", th.flame, v => th.flame = v), color("Deep red", th.deepRed, v => th.deepRed = v)]),
+      color("Amber", th.amber, v => th.amber = v),
+    ]));
+
+    /* BRAND + NAV */
+    const br = content.brand;
+    const linkList = el("div", {});
+    function renderLinks() {
+      linkList.innerHTML = "";
+      br.links.forEach((l, i) => {
+        linkList.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "ihead" }, [el("span", { class: "ititle" }, l.label || "Link"), tools(br.links, i, renderLinks)]),
+          el("div", { class: "row2" }, [text("Label", l.label, v => { l.label = v; }), text("Link (href)", l.href, v => { l.href = v; })]),
+        ]));
+      });
+      linkList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { br.links.push({ label: "New", href: "#" }); renderLinks(); preview(); } }, "+ Add nav link"));
+    }
+    renderLinks();
+    f.appendChild(section("Brand & navigation", "", [
+      text("Brand name", br.name, v => br.name = v),
+      text("Nav button text", br.navCta, v => br.navCta = v),
+      el("div", { class: "hint" }, "Navigation links:"), linkList,
+    ]));
+
+    /* HERO */
+    const h = content.hero;
+    f.appendChild(section("Hero", "top of page", [
+      text("Eyebrow (small label)", h.eyebrow, v => h.eyebrow = v),
+      text("Big title", h.title, v => h.title = v),
+      el("div", { class: "row2" }, [text("Tagline", h.tagline, v => h.tagline = v), text("Tagline highlight", h.taglineEm, v => h.taglineEm = v)]),
+      text("Sub-text", h.sub, v => h.sub = v, { multiline: true }),
+      el("div", { class: "row2" }, [text("Button 1", h.cta1, v => h.cta1 = v), text("Button 2", h.cta2, v => h.cta2 = v)]),
+    ]));
+
+    /* MARQUEE */
+    const mqList = el("div", {});
+    function renderMq() {
+      mqList.innerHTML = "";
+      content.marquee.forEach((m, i) => {
+        mqList.appendChild(el("div", { class: "item" }, [el("div", { class: "ihead" }, [
+          (function () { const inp = el("input", { type: "text", style: { flex: "1", background: "#0e0b09", border: "1px solid var(--border2)", borderRadius: "6px", padding: "7px 9px", color: "var(--ink)", fontSize: "13px" } }); inp.value = m; inp.addEventListener("input", () => { content.marquee[i] = inp.value; preview(); }); return inp; })(),
+          tools(content.marquee, i, renderMq),
+        ])]));
+      });
+      mqList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { content.marquee.push("New phrase"); renderMq(); preview(); } }, "+ Add phrase"));
+    }
+    renderMq();
+    f.appendChild(section("Scrolling marquee", "", [mqList]));
+
+    /* STORY */
+    const st = content.story;
+    const paraList = el("div", {});
+    function renderParas() {
+      paraList.innerHTML = "";
+      st.paras.forEach((p, i) => {
+        const ta = el("textarea", {}); ta.value = p; ta.addEventListener("input", () => { st.paras[i] = ta.value; preview(); });
+        paraList.appendChild(el("div", { class: "item" }, [el("div", { class: "ihead" }, [el("span", { class: "ititle" }, "Paragraph " + (i + 1)), tools(st.paras, i, renderParas)]), el("label", { class: "f" }, [ta])]));
+      });
+      paraList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { st.paras.push("New paragraph. Use **bold** or *italic*."); renderParas(); preview(); } }, "+ Add paragraph"));
+    }
+    renderParas();
+    const statList = el("div", {});
+    function renderStats() {
+      statList.innerHTML = "";
+      st.stats.forEach((s, i) => {
+        statList.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "ihead" }, [el("span", { class: "ititle" }, s.value || "Stat"), tools(st.stats, i, renderStats)]),
+          el("div", { class: "row2" }, [text("Number", s.value, v => { s.value = v; }), text("Label", s.label, v => { s.label = v; })]),
+        ]));
+      });
+      statList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { st.stats.push({ value: "00", label: "New stat" }); renderStats(); preview(); } }, "+ Add stat"));
+    }
+    renderStats();
+    f.appendChild(section("Story", "", [
+      text("Eyebrow", st.eyebrow, v => st.eyebrow = v),
+      text("Heading", st.heading, v => st.heading = v),
+      el("div", { class: "hint" }, "Paragraphs (supports **bold** and *italic*):"), paraList,
+      el("div", { class: "hint" }, "Stat boxes:"), statList,
+    ]));
+
+    /* PRODUCTS */
+    const pr = content.products;
+    const prodList = el("div", {});
+    function renderProds() {
+      prodList.innerHTML = "";
+      pr.items.forEach((s, i) => {
+        prodList.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "ihead" }, [el("span", { class: "ititle" }, s.name || "Sauce"), tools(pr.items, i, renderProds)]),
+          el("div", { class: "row2" }, [text("Name", s.name, v => { s.name = v; }), text("Sub-type", s.type, v => { s.type = v; })]),
+          el("div", { class: "row2" }, [
+            (function () { const lbl = el("span", { class: "fl" }, "Heat 1–4"); const sel = el("select", {}); [1, 2, 3, 4].forEach(n => { const o = el("option", { value: n }, String(n)); if (n === s.heat) o.setAttribute("selected", ""); sel.appendChild(o); }); sel.addEventListener("change", () => { s.heat = Number(sel.value); preview(); }); return el("label", { class: "f" }, [lbl, sel]); })(),
+            text("Scoville (SHU)", s.scoville, v => { s.scoville = v; }, { type: "number" }),
+          ]),
+          el("div", { class: "row2" }, [text("Price ($)", s.price, v => { s.price = v; }, { type: "number" }), color("Label colour", s.label, v => { s.label = v; })]),
+          text("Tasting notes", s.notes, v => { s.notes = v; }, { multiline: true }),
+        ]));
+      });
+      prodList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { pr.items.push({ name: "New Sauce", type: "Pepper & spice", label: "#ff5a1f", heat: 2, scoville: 10000, price: 13, notes: "Describe the flavour and heat." }); renderProds(); preview(); } }, "+ Add sauce"));
+    }
+    renderProds();
+    f.appendChild(section("Sauces", pr.items.length + " items", [
+      text("Eyebrow", pr.eyebrow, v => pr.eyebrow = v),
+      text("Heading", pr.heading, v => pr.heading = v),
+      text("Sub-text", pr.sub, v => pr.sub = v, { multiline: true }),
+      text("Size / unit label", pr.unit, v => pr.unit = v, { placeholder: "150ml" }),
+      el("div", { class: "hint" }, "Each sauce also drives a row on the heat scale below."), prodList,
+    ]));
+
+    /* HEAT */
+    const ht = content.heat;
+    const legendWrap = el("div", { class: "row2" });
+    ht.legend.forEach((lg, i) => legendWrap.appendChild(text("Legend " + (i + 1), lg, v => { ht.legend[i] = v; })));
+    f.appendChild(section("Heat scale", "", [
+      text("Eyebrow", ht.eyebrow, v => ht.eyebrow = v),
+      text("Heading", ht.heading, v => ht.heading = v),
+      text("Sub-text", ht.sub, v => ht.sub = v, { multiline: true }),
+      el("div", { class: "hint" }, "Scale labels (left → right):"), legendWrap,
+    ]));
+
+    /* CRAFT */
+    const cr = content.craft;
+    const pillarList = el("div", {});
+    function renderPillars() {
+      pillarList.innerHTML = "";
+      cr.pillars.forEach((p, i) => {
+        pillarList.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "ihead" }, [el("span", { class: "ititle" }, p.title || "Pillar"), tools(cr.pillars, i, renderPillars)]),
+          text("Title", p.title, v => { p.title = v; }),
+          text("Body", p.body, v => { p.body = v; }, { multiline: true }),
+        ]));
+      });
+      pillarList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { cr.pillars.push({ title: "New pillar", body: "Describe this step of the craft." }); renderPillars(); preview(); } }, "+ Add pillar"));
+    }
+    renderPillars();
+    f.appendChild(section("Craft", "", [
+      text("Eyebrow", cr.eyebrow, v => cr.eyebrow = v),
+      text("Heading", cr.heading, v => cr.heading = v),
+      el("div", { class: "hint" }, "Pillars (icons cycle automatically):"), pillarList,
+    ]));
+
+    /* CTA */
+    const ct = content.cta;
+    f.appendChild(section("Email call-to-action", "", [
+      text("Eyebrow", ct.eyebrow, v => ct.eyebrow = v),
+      text("Heading", ct.heading, v => ct.heading = v),
+      text("Sub-text", ct.sub, v => ct.sub = v, { multiline: true }),
+      text("Button text", ct.button, v => ct.button = v),
+    ]));
+
+    /* FOOTER */
+    const ft = content.footer;
+    const colList = el("div", {});
+    function renderCols() {
+      colList.innerHTML = "";
+      ft.columns.forEach((col, ci) => {
+        const linkWrap = el("div", {});
+        function renderColLinks() {
+          linkWrap.innerHTML = "";
+          col.links.forEach((l, li) => linkWrap.appendChild(el("div", { class: "row2", style: { marginTop: "6px" } }, [text("Label", l.label, v => { l.label = v; }), (function () { const w = el("div", { class: "crow" }, [text("Link", l.href, v => { l.href = v; })]); const t = el("button", { class: "mini del", type: "button", title: "Remove", onclick: () => { col.links.splice(li, 1); renderColLinks(); preview(); } }, "✕"); w.appendChild(t); return w; })()])));
+          linkWrap.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { col.links.push({ label: "Link", href: "#" }); renderColLinks(); preview(); } }, "+ link"));
+        }
+        renderColLinks();
+        colList.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "ihead" }, [el("span", { class: "ititle" }, col.title || "Column"), tools(ft.columns, ci, renderCols)]),
+          text("Column title", col.title, v => { col.title = v; }), linkWrap,
+        ]));
+      });
+      colList.appendChild(el("button", { class: "addbtn", type: "button", onclick: () => { ft.columns.push({ title: "New", links: [{ label: "Link", href: "#" }] }); renderCols(); preview(); } }, "+ Add footer column"));
+    }
+    renderCols();
+    f.appendChild(section("Footer", "", [
+      text("Footer tagline", ft.tagline, v => ft.tagline = v, { multiline: true }),
+      el("div", { class: "hint" }, "Footer columns:"), colList,
+      text("Copyright line", ft.copyright, v => ft.copyright = v),
+      el("div", { class: "hint" }, "Social links:"),
+      el("div", { class: "row2" }, [text("Instagram", ft.socials.instagram, v => ft.socials.instagram = v), text("TikTok", ft.socials.tiktok, v => ft.socials.tiktok = v)]),
+      text("X / Twitter", ft.socials.x, v => ft.socials.x = v),
+    ]));
+  }
+
+  /* ---------------- status ---------------- */
+  function setStatus(msg, kind) { const s = $("status"); s.textContent = msg || ""; s.className = "status" + (kind ? " " + kind : ""); }
+
+  /* ---------------- actions ---------------- */
+  async function publish() {
+    setStatus("Publishing…", "busy");
+    try {
+      const r = await fetch("/api/content", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content }) });
+      if (r.status === 401) { setStatus("Session expired", "err"); return showLogin(); }
+      const j = await r.json().catch(() => ({}));
+      if (r.ok) { setStatus("Published ✓ — live now", "ok"); setTimeout(() => setStatus(""), 4000); }
+      else setStatus(j.error || "Publish failed", "err");
+    } catch (e) { setStatus("Network error", "err"); }
+  }
+  function exportJson() {
+    const blob = new Blob([JSON.stringify(content, null, 2)], { type: "application/json" });
+    const a = el("a", { href: URL.createObjectURL(blob), download: "content.json" }); document.body.appendChild(a); a.click(); a.remove();
+    setStatus("Exported content.json", "ok"); setTimeout(() => setStatus(""), 3000);
+  }
+  function importJson(file) {
+    const rd = new FileReader();
+    rd.onload = () => { try { const obj = JSON.parse(rd.result); content = K.merge(K.DEFAULT_CONTENT, obj); renderForm(); preview(); setStatus("Imported — remember to Publish", "ok"); } catch (e) { setStatus("Invalid JSON file", "err"); } };
+    rd.readAsText(file);
+  }
+  function resetDefaults() { if (confirm("Reset all content back to the original defaults? This only affects the editor until you Publish.")) { content = clone(K.DEFAULT_CONTENT); renderForm(); preview(); setStatus("Reset to defaults", "ok"); } }
+
+  /* ---------------- login flow ---------------- */
+  function showLogin() { $("app").style.display = "none"; $("login").style.display = "grid"; $("pw").value = ""; setTimeout(() => $("pw").focus(), 50); }
+  async function enterAdmin() {
+    $("login").style.display = "none"; $("app").style.display = "grid";
+    try { const r = await fetch("/api/content", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && j.content) content = K.merge(K.DEFAULT_CONTENT, j.content); } } catch (e) {}
+    renderForm(); preview();
+  }
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); const err = $("loginErr"); err.textContent = "";
+    try {
+      const r = await fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: $("pw").value }) });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok) enterAdmin(); else err.textContent = j.error || "Login failed";
+    } catch (e2) { err.textContent = "Network error — is the site deployed?"; }
+  });
+
+  /* ---------------- wire toolbar ---------------- */
+  $("publish").addEventListener("click", publish);
+  $("exportBtn").addEventListener("click", exportJson);
+  $("importBtn").addEventListener("click", () => $("importFile").click());
+  $("importFile").addEventListener("change", (e) => { if (e.target.files[0]) importJson(e.target.files[0]); e.target.value = ""; });
+  $("resetBtn").addEventListener("click", resetDefaults);
+  $("viewSite").addEventListener("click", () => window.open("/", "_blank"));
+  $("logout").addEventListener("click", async () => { await fetch("/api/login", { method: "DELETE" }).catch(() => {}); showLogin(); });
+  document.querySelectorAll("#deviceSeg button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("#deviceSeg button").forEach((x) => x.classList.remove("on")); b.classList.add("on");
+    frame.classList.toggle("mobile", b.dataset.d === "mobile");
+  }));
+  // Ctrl/Cmd+S to publish
+  addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); if ($("app").style.display !== "none") publish(); } });
+
+  /* ---------------- boot: skip login if cookie already valid ---------------- */
+  (async function boot() {
+    try { const r = await fetch("/api/login", { cache: "no-store" }); const j = await r.json().catch(() => ({})); if (j && j.authed) return enterAdmin(); } catch (e) {}
+    showLogin();
+  })();
+})();
+</script>
+</body>
+</html>

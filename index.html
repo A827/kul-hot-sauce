@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>kül — small-batch hot sauce, born from ash</title>
+<meta name="description" content="kül is a small-batch hot sauce forged from fire-roasted, ash-smoked peppers. Four sauces. One obsession with smoke and slow heat." />
+<meta property="og:title" content="kül — small-batch smoked hot sauce" />
+<meta property="og:description" content="Born from fire. Bottled from ash. Four small-batch sauces, from a gentle glow to a slow-building inferno." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#0a0908" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  html,body{margin:0;background:#0a0908;color:#f6efe4;font-family:'Inter',system-ui,sans-serif}
+  #boot{position:fixed;inset:0;display:grid;place-items:center;background:#0a0908;z-index:999;transition:opacity .5s}
+  #boot.hide{opacity:0;pointer-events:none}
+  #boot .b{font-family:'Anton',sans-serif;font-size:64px;background:linear-gradient(180deg,#fff5ea,#ff5a1f);-webkit-background-clip:text;background-clip:text;color:transparent;animation:bp 1.4s ease-in-out infinite}
+  @keyframes bp{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+  <div id="boot"><div class="b">kül</div></div>
+  <script src="site.js"></script>
+  <script>
+    (async function () {
+      let content = null;
+      try {
+        const r = await fetch("/api/content", { cache: "no-store" });
+        if (r.ok) { const j = await r.json(); content = j && j.content ? j.content : j; }
+      } catch (e) { /* offline / local file — fall back to defaults */ }
+      window.KUL.mountSite(content || window.KUL.DEFAULT_CONTENT);
+      const boot = document.getElementById("boot");
+      if (boot) { boot.classList.add("hide"); setTimeout(() => boot.remove(), 500); }
+    })();
+  </script>
+</body>
+</html>
