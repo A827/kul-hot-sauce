@@ -28,7 +28,9 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     if (!isAuthed(req)) return res.status(401).json({ error: "Unauthorized. Please log in again." });
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    // @vercel/blob authenticates via either a static BLOB_READ_WRITE_TOKEN or, on Vercel,
+    // OIDC (BLOB_STORE_ID + the auto-injected VERCEL_OIDC_TOKEN). Accept either.
+    if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) {
       return res.status(500).json({ error: "Storage not configured. Connect a Blob store to this project in Vercel." });
     }
     let body;
