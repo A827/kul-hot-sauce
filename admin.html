@@ -271,6 +271,16 @@
       color("Amber", th.amber, v => th.amber = v),
     ]));
 
+    /* SEO & SOCIAL */
+    const seo = content.seo || (content.seo = { title: "", description: "", shareImage: "" });
+    f.appendChild(section("SEO & social", "search + sharing", [
+      el("div", { class: "hint" }, "How your site appears in Google results and when shared on iMessage, WhatsApp, X, etc."),
+      text("Page title", seo.title, v => seo.title = v),
+      text("Meta description", seo.description, v => seo.description = v, { multiline: true }),
+      el("div", { class: "hint" }, "Social share image — 1200×630 recommended. Leave empty to use the default kül card."),
+      imageControl(() => seo.shareImage, v => { seo.shareImage = v; }, { placeholder: "Share image" }),
+    ]));
+
     /* BRAND + NAV */
     const br = content.brand;
     const linkList = el("div", {});

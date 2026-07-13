@@ -9,6 +9,11 @@
   /* ---------- DEFAULT CONTENT (fallback when no live data) ---------- */
   const DEFAULT_CONTENT = {
     theme: { bg: "#0a0908", ink: "#f6efe4", ember: "#ff5a1f", ember2: "#ff8a3d", flame: "#ff3b2e", deepRed: "#b3121a", amber: "#f4a83f" },
+    seo: {
+      title: "kül — small-batch smoked hot sauce, born from ash",
+      description: "kül is a small-batch hot sauce forged from fire-roasted, ash-smoked peppers. Four sauces, from a gentle glow to a slow-building inferno.",
+      shareImage: ""
+    },
     brand: {
       name: "kül", navCta: "Shop Sauces",
       links: [
@@ -454,14 +459,50 @@
   /* ---------- mount into the current page (for index.html) ---------- */
   function mountSite(c) {
     c = merge(DEFAULT_CONTENT, c || {});
-    document.title = c.brand.name + " — " + c.hero.tagline + " " + c.hero.taglineEm;
     let st = document.getElementById("kul-theme");
     if (!st) { st = document.createElement("style"); st.id = "kul-theme"; document.head.appendChild(st); }
     st.textContent = themeCSS(c.theme) + BASE_CSS;
     document.body.innerHTML = renderBody(c);
+    applySEO(c);
     siteRuntime();
   }
 
+  /* ---------- SEO: structured data + meta (crawlable defaults are baked into index.html) ---------- */
+  const SITE_URL = "https://kul-hot-sauce.vercel.app";
+  function buildJSONLD(c) {
+    c = merge(DEFAULT_CONTENT, c || {});
+    const org = { "@context": "https://schema.org", "@type": "Organization", name: c.brand.name, url: SITE_URL + "/", description: c.footer.tagline };
+    if (c.brand.logo) org.logo = c.brand.logo;
+    const list = {
+      "@context": "https://schema.org", "@type": "ItemList",
+      itemListElement: c.products.items.map((s, i) => ({
+        "@type": "ListItem", position: i + 1,
+        item: {
+          "@type": "Product", name: c.brand.name + " — " + s.name, description: s.notes, category: "Hot Sauce",
+          ...(s.image ? { image: s.image } : {}),
+          offers: { "@type": "Offer", price: String(s.price), priceCurrency: "USD", availability: "https://schema.org/InStock" }
+        }
+      }))
+    };
+    return [org, list];
+  }
+  function setMetaTag(kind, key, val) {
+    if (val == null) return;
+    let m = document.head.querySelector("meta[" + kind + '="' + key + '"]');
+    if (!m) { m = document.createElement("meta"); m.setAttribute(kind, key); document.head.appendChild(m); }
+    m.setAttribute("content", val);
+  }
+  function applySEO(c) {
+    c = merge(DEFAULT_CONTENT, c || {});
+    const s = c.seo || {};
+    if (s.title) { document.title = s.title; setMetaTag("property", "og:title", s.title); setMetaTag("name", "twitter:title", s.title); }
+    if (s.description) { setMetaTag("name", "description", s.description); setMetaTag("property", "og:description", s.description); setMetaTag("name", "twitter:description", s.description); }
+    if (s.shareImage) { setMetaTag("property", "og:image", s.shareImage); setMetaTag("name", "twitter:image", s.shareImage); }
+    let j = document.getElementById("kul-jsonld");
+    if (!j) { j = document.createElement("script"); j.type = "application/ld+json"; j.id = "kul-jsonld"; document.head.appendChild(j); }
+    j.textContent = JSON.stringify(buildJSONLD(c));
+  }
+
   function fullCSS(theme) { return themeCSS(theme) + BASE_CSS; }
-  window.KUL = { DEFAULT_CONTENT, renderBody, renderDoc, mountSite, themeCSS, fullCSS, hydrate: siteRuntime, merge };
+  window.KUL = { DEFAULT_CONTENT, renderBody, renderDoc, mountSite, themeCSS, fullCSS, hydrate: siteRuntime, merge, buildJSONLD, applySEO };
 })();
