@@ -365,13 +365,13 @@
     </div></footer>
 <script src="site.js"></script>
 <script>
-(async function(){
-  var K=window.KUL;
-  try{
-    var r=await fetch('/api/content',{cache:'no-store'});
-    if(r.ok){ var j=await r.json(); if(j&&j.content){ K.mountSite(j.content); return; } }
-  }catch(e){}
+(function(){
+  var K=window.KUL; if(!K) return;
   K.hydrate();
+  fetch('/api/content',{cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ if(j && j.content) K.mountSite(j.content); })
+    .catch(function(){});
 })();
 </script>
 </body>
