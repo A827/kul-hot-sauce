@@ -112,7 +112,7 @@
   /* ---------- static css ---------- */
   const BASE_CSS = `
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;scroll-padding-top:88px}
   body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(120% 80% at 50% -10%, rgba(255,90,31,.10), transparent 55%),radial-gradient(90% 60% at 100% 110%, rgba(179,18,26,.10), transparent 60%);mix-blend-mode:screen}
   body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
@@ -229,8 +229,12 @@
   .foot-bottom .socials{display:flex;gap:16px}
   .foot-bottom .socials a{width:36px;height:36px;border:1px solid var(--border-2);border-radius:50%;display:grid;place-items:center;color:var(--muted);transition:.25s}
   .foot-bottom .socials a:hover{border-color:var(--ember);color:var(--ember)}
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-  .reveal.in{opacity:1;transform:none}
+  .reveal{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  html.js .reveal{opacity:0;transform:translateY(28px)}
+  html.js .reveal.in{opacity:1;transform:none}
+  .pimg{height:190px;width:100%;object-fit:contain;margin:4px auto 18px;filter:drop-shadow(0 18px 26px rgba(0,0,0,.55))}
+  .brand-logo{height:30px;width:auto;display:block}
+  .foot-brand .brand-logo{height:38px}
   .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
   @media(max-width:960px){.story-grid{grid-template-columns:1fr;gap:40px}.grid{grid-template-columns:repeat(2,1fr)}.pillars{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr;gap:32px}.scale-row{grid-template-columns:110px 1fr 90px;gap:12px}}
   @media(max-width:640px){.nav-links{display:none}.hamb{display:flex}.nav-in .btn-fire{display:none}section.block{padding:80px 0}.grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr}.form{flex-direction:column;border-radius:20px}.form input,.form .btn{width:100%;justify-content:center}.scale-row{grid-template-columns:1fr;gap:8px}.scale-row .scoville{text-align:left}}
@@ -265,7 +269,7 @@
     c = merge(DEFAULT_CONTENT, c || {});
     const nav = `
     <header class="nav" id="nav"><div class="nav-in">
-      <a href="#top" class="brand">${esc(c.brand.name)}<span class="dot"></span></a>
+      <a href="#top" class="brand">${c.brand.logo ? `<img class="brand-logo" src="${attr(c.brand.logo)}" alt="${attr(c.brand.name)}">` : esc(c.brand.name)}<span class="dot"></span></a>
       <nav class="nav-links">${c.brand.links.map(l => `<a href="${attr(l.href)}">${esc(l.label)}</a>`).join("")}</nav>
       <a href="#sauces" class="btn btn-fire">${esc(c.brand.navCta)}</a>
       <button class="hamb" id="hamb" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -328,7 +332,7 @@
     const cards = c.products.items.map((s, i) => `
       <article class="card reveal d${(i % 4) + 1}" style="--label:${attr(s.label)}">
         <div class="heat-badge">${flameDots(s.heat)} ${esc(HEAT_WORDS[s.heat] || "")}</div>
-        ${bottle(s.label)}
+        ${s.image ? `<img class="pimg" src="${attr(s.image)}" alt="${attr(s.name)}" loading="lazy">` : bottle(s.label)}
         <div class="type">${esc(s.type)}</div>
         <h3>${esc(s.name)}</h3>
         <p class="notes">${esc(s.notes)}</p>
@@ -392,7 +396,7 @@
     const footer = `
     <footer class="site"><div class="wrap">
       <div class="foot-grid">
-        <div class="foot-brand"><div class="brand">${esc(c.brand.name)}<span class="dot" style="animation:none"></span></div><p>${esc(c.footer.tagline)}</p></div>
+        <div class="foot-brand"><div class="brand">${c.brand.logo ? `<img class="brand-logo" src="${attr(c.brand.logo)}" alt="${attr(c.brand.name)}">` : esc(c.brand.name)}<span class="dot" style="animation:none"></span></div><p>${esc(c.footer.tagline)}</p></div>
         ${c.footer.columns.map(col => `<div class="foot-col"><h4>${esc(col.title)}</h4>${col.links.map(l => `<a href="${attr(l.href)}">${esc(l.label)}</a>`).join("")}</div>`).join("")}
       </div>
       <div class="foot-bottom">
@@ -410,6 +414,7 @@
 
   /* ---------- runtime (runs in main page OR injected into iframe) ---------- */
   function siteRuntime() {
+    document.documentElement.classList.add("js");
     const nav = document.getElementById("nav");
     if (nav) addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 40));
     const hamb = document.getElementById("hamb"), mm = document.getElementById("mobileMenu");
@@ -457,5 +462,6 @@
     siteRuntime();
   }
 
-  window.KUL = { DEFAULT_CONTENT, renderBody, renderDoc, mountSite, themeCSS, merge };
+  function fullCSS(theme) { return themeCSS(theme) + BASE_CSS; }
+  window.KUL = { DEFAULT_CONTENT, renderBody, renderDoc, mountSite, themeCSS, fullCSS, hydrate: siteRuntime, merge };
 })();
