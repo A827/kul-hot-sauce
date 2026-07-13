@@ -105,9 +105,11 @@
       <div class="brand">kül<span class="dot"></span></div>
       <div class="sp"></div>
       <span class="status" id="status"></span>
+      <button class="tbtn" id="saveDraft">Save draft</button>
       <button class="tbtn primary" id="publish">Publish</button>
     </div>
     <div class="bar2">
+      <button class="tbtn" id="previewBtn">◉ Preview draft</button>
       <button class="tbtn" id="viewSite">↗ View site</button>
       <button class="tbtn" id="exportBtn">⬇ Export</button>
       <button class="tbtn" id="importBtn">⬆ Import</button>
@@ -498,6 +500,54 @@
       el("div", { class: "row2" }, [text("Instagram", ft.socials.instagram, v => ft.socials.instagram = v), text("TikTok", ft.socials.tiktok, v => ft.socials.tiktok = v)]),
       text("X / Twitter", ft.socials.x, v => ft.socials.x = v),
     ]));
+
+    /* HISTORY & BACKUPS */
+    const histList = el("div", {});
+    function loadHistory() {
+      histList.innerHTML = ""; histList.appendChild(el("div", { class: "hint" }, "Loading…"));
+      fetch("/api/content?history=1", { cache: "no-store" }).then(r => r.ok ? r.json() : { history: [] }).then(j => {
+        histList.innerHTML = "";
+        const items = (j && j.history) || [];
+        if (!items.length) { histList.appendChild(el("div", { class: "hint" }, "No backups yet — each Publish saves one here.")); return; }
+        items.forEach(it => {
+          const when = it.at ? new Date(it.at).toLocaleString() : it.name.replace("backups/", "").replace(".json", "");
+          histList.appendChild(el("div", { class: "item" }, [el("div", { class: "ihead" }, [
+            el("span", { class: "ititle", style: { color: "var(--ink)" } }, when),
+            el("button", { class: "mini", type: "button", title: "Restore", style: { width: "auto", padding: "0 12px" }, onclick: () => restoreBackup(it.name, when) }, "Restore"),
+          ])]));
+        });
+      }).catch(() => { histList.innerHTML = ""; histList.appendChild(el("div", { class: "hint" }, "Could not load history.")); });
+    }
+    function restoreBackup(name, when) {
+      if (!confirm("Load the backup from " + when + " into the editor? Nothing changes live until you Publish.")) return;
+      fetch("/api/content?restore=" + encodeURIComponent(name), { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => {
+        if (j && j.content) { content = K.merge(K.DEFAULT_CONTENT, j.content); renderForm(); preview(); setStatus("Backup loaded — review, then Publish", "ok"); }
+        else setStatus("Could not load backup", "err");
+      });
+    }
+    const histSection = section("History & backups", "restore points", [
+      el("div", { class: "hint" }, "Every Publish saves a restore point (last 20 kept). Restoring loads it into the editor — Publish to go live."),
+      el("button", { class: "addbtn", type: "button", onclick: loadHistory }, "↻ Load history"),
+      histList,
+    ]);
+    f.appendChild(histSection);
+    histSection.addEventListener("toggle", () => { if (histSection.open && !histList.dataset.loaded) { histList.dataset.loaded = "1"; loadHistory(); } });
+
+    /* STUDIO SETTINGS (change password) */
+    const pwInput = (ph) => { const i = el("input", { type: "password", placeholder: ph, autocomplete: "new-password" }); Object.assign(i.style, { width: "100%", background: "#0e0b09", border: "1px solid var(--border2)", borderRadius: "8px", padding: "10px 11px", color: "var(--ink)", fontSize: "13px", marginTop: "8px", outline: "none" }); return i; };
+    const cur = pwInput("Current password"), nw = pwInput("New password (min 6 characters)"), pwMsg = el("div", { class: "hint", style: { marginTop: "10px" } });
+    const pwBtn = el("button", { class: "addbtn", type: "button", style: { marginTop: "10px" }, onclick: () => {
+      pwMsg.style.color = "var(--ember2)"; pwMsg.textContent = "Saving…";
+      fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "change-password", current: cur.value, next: nw.value }) })
+        .then(r => r.json().catch(() => ({})).then(j => ({ ok: r.ok, j }))).then(({ ok, j }) => {
+          if (ok) { pwMsg.style.color = "var(--ok)"; pwMsg.textContent = "Password changed ✓"; cur.value = ""; nw.value = ""; }
+          else { pwMsg.style.color = "var(--err)"; pwMsg.textContent = (j && j.error) || "Could not change password"; }
+        }).catch(() => { pwMsg.style.color = "var(--err)"; pwMsg.textContent = "Network error"; });
+    } }, "Change password");
+    f.appendChild(section("Studio settings", "password", [
+      el("div", { class: "hint" }, "Change your studio login password. Your Vercel ADMIN_PASSWORD always keeps working as a backup key."),
+      cur, nw, pwBtn, pwMsg,
+    ]));
   }
 
   /* ---------------- status ---------------- */
@@ -512,6 +562,15 @@
       const j = await r.json().catch(() => ({}));
       if (r.ok) { setStatus("Published ✓ — live now", "ok"); setTimeout(() => setStatus(""), 4000); }
       else setStatus(j.error || "Publish failed", "err");
+    } catch (e) { setStatus("Network error", "err"); }
+  }
+  async function saveDraft() {
+    setStatus("Saving draft…", "busy");
+    try {
+      const r = await fetch("/api/content?draft=1", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content }) });
+      if (r.status === 401) { setStatus("Session expired", "err"); return showLogin(); }
+      if (r.ok) { setStatus("Draft saved ✓ — use Preview to see it", "ok"); setTimeout(() => setStatus(""), 4000); }
+      else setStatus("Draft save failed", "err");
     } catch (e) { setStatus("Network error", "err"); }
   }
   function exportJson() {
@@ -530,7 +589,12 @@
   function showLogin() { $("app").style.display = "none"; $("login").style.display = "grid"; $("pw").value = ""; setTimeout(() => $("pw").focus(), 50); }
   async function enterAdmin() {
     $("login").style.display = "none"; $("app").style.display = "grid";
-    try { const r = await fetch("/api/content", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && j.content) content = K.merge(K.DEFAULT_CONTENT, j.content); } } catch (e) {}
+    try {
+      let loaded = false;
+      const dr = await fetch("/api/content?draft=1", { cache: "no-store" });
+      if (dr.ok) { const dj = await dr.json(); if (dj && dj.content) { content = K.merge(K.DEFAULT_CONTENT, dj.content); loaded = true; setStatus("Unpublished draft loaded", "ok"); setTimeout(() => setStatus(""), 3500); } }
+      if (!loaded) { const r = await fetch("/api/content", { cache: "no-store" }); if (r.ok) { const j = await r.json(); if (j && j.content) content = K.merge(K.DEFAULT_CONTENT, j.content); } }
+    } catch (e) {}
     renderForm(); preview();
   }
   $("loginForm").addEventListener("submit", async (e) => {
@@ -544,6 +608,8 @@
 
   /* ---------------- wire toolbar ---------------- */
   $("publish").addEventListener("click", publish);
+  $("saveDraft").addEventListener("click", saveDraft);
+  $("previewBtn").addEventListener("click", () => window.open("/?preview", "_blank"));
   $("exportBtn").addEventListener("click", exportJson);
   $("importBtn").addEventListener("click", () => $("importFile").click());
   $("importFile").addEventListener("change", (e) => { if (e.target.files[0]) importJson(e.target.files[0]); e.target.value = ""; });

@@ -377,9 +377,15 @@
 (function(){
   var K=window.KUL; if(!K) return;
   K.hydrate();
-  fetch('/api/content',{cache:'no-store'})
+  var preview = location.search.indexOf('preview') > -1;
+  fetch(preview ? '/api/content?draft=1' : '/api/content', {cache:'no-store', credentials:'same-origin'})
     .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(j){ if(j && j.content) K.mountSite(j.content); })
+    .then(function(j){
+      if(j && j.content){
+        K.mountSite(j.content);
+        if(preview){ var b=document.createElement('div'); b.textContent='DRAFT PREVIEW'; b.style.cssText='position:fixed;bottom:14px;left:14px;z-index:9999;background:#b3121a;color:#fff;font:700 11px/1.2 Inter,sans-serif;letter-spacing:.12em;padding:10px 14px;border-radius:100px;box-shadow:0 6px 20px rgba(0,0,0,.5)'; document.body.appendChild(b); }
+      }
+    })
     .catch(function(){});
 })();
 </script>
