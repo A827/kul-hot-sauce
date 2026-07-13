@@ -14,6 +14,15 @@
       description: "kül is a small-batch hot sauce forged from fire-roasted, ash-smoked peppers. Four sauces, from a gentle glow to a slow-building inferno.",
       shareImage: ""
     },
+    announcement: { on: false, text: "Free shipping on orders over $40 — new batch just dropped.", link: "#sauces", linkText: "Shop now" },
+    sections: [
+      { key: "marquee", label: "Scrolling marquee", on: true },
+      { key: "story", label: "Story", on: true },
+      { key: "products", label: "Sauces", on: true },
+      { key: "heat", label: "Heat scale", on: true },
+      { key: "craft", label: "Craft", on: true },
+      { key: "cta", label: "Email call-to-action", on: true }
+    ],
     brand: {
       name: "kül", navCta: "Shop Sauces",
       links: [
@@ -146,6 +155,12 @@
   .mobile-menu.open{opacity:1;pointer-events:auto}
   .mobile-menu a{font-family:'Anton',sans-serif;font-size:34px;color:var(--ink);text-transform:uppercase}
   .mobile-menu a:hover{color:var(--ember)}
+  .anno{position:fixed;top:0;left:0;right:0;min-height:38px;z-index:60;display:flex;align-items:center;justify-content:center;gap:0;background:linear-gradient(90deg,var(--deep-red),var(--ember));color:#fff;font-size:12.5px;font-weight:600;letter-spacing:.02em;padding:7px 44px;text-align:center}
+  .anno-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;max-width:var(--maxw)}
+  .anno-in a{text-decoration:underline;font-weight:700;white-space:nowrap;color:#fff}
+  .anno-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;opacity:.85;padding:2px 8px}
+  .anno-x:hover{opacity:1}
+  body.has-anno header.nav{top:38px}
   .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden}
   #embers{position:absolute;inset:0;z-index:1}
   .hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(60% 55% at 50% 88%, rgba(255,90,31,.28), transparent 62%),radial-gradient(80% 60% at 50% 120%, rgba(179,18,26,.55), transparent 70%),linear-gradient(180deg,var(--bg) 0%, #0c0908 60%, #160b06 100%)}
@@ -414,7 +429,13 @@
       </div>
     </div></footer>`;
 
-    return nav + hero + marquee + story + products + heat + craft + cta + footer;
+    const an = c.announcement || {};
+    const announcement = an.on ? `<div class="anno" role="region" aria-label="Announcement"><div class="anno-in"><span>${esc(an.text)}</span>${an.link ? `<a href="${attr(an.link)}">${esc(an.linkText || "Shop")} →</a>` : ""}</div><button class="anno-x" aria-label="Dismiss">&times;</button></div>` : "";
+
+    const sectionMap = { marquee, story, products, heat, craft, cta };
+    const order = (c.sections && c.sections.length) ? c.sections : DEFAULT_CONTENT.sections;
+    const mid = order.filter(s => s && s.on !== false && sectionMap[s.key]).map(s => sectionMap[s.key]).join("");
+    return announcement + nav + hero + mid + footer;
   }
 
   /* ---------- runtime (runs in main page OR injected into iframe) ---------- */
@@ -422,6 +443,8 @@
     document.documentElement.classList.add("js");
     const nav = document.getElementById("nav");
     if (nav) addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 40));
+    const anno = document.querySelector(".anno");
+    if (anno) { document.body.classList.add("has-anno"); const ax = anno.querySelector(".anno-x"); if (ax) ax.addEventListener("click", () => { anno.remove(); document.body.classList.remove("has-anno"); }); }
     const hamb = document.getElementById("hamb"), mm = document.getElementById("mobileMenu");
     if (hamb && mm) { hamb.addEventListener("click", () => mm.classList.toggle("open")); mm.querySelectorAll("a").forEach(a => a.addEventListener("click", () => mm.classList.remove("open"))); }
     const grid = document.querySelector(".grid");

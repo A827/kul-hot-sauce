@@ -71,6 +71,8 @@
   .imgbtns button:hover{border-color:var(--ember);color:var(--ember2)}
   .imgbtns button.rm:hover{border-color:var(--err);color:var(--err)}
   .imgstat{font-size:11px;color:var(--ember2);margin-left:2px}
+  .tglrow{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
+  .tgl{width:17px;height:17px;accent-color:var(--ember);cursor:pointer;flex:none}
   /* ---- preview ---- */
   .preview{position:relative;background:#000;display:flex;flex-direction:column;min-width:0}
   .pv-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--panel2);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted)}
@@ -183,6 +185,11 @@
     t.addEventListener("input", () => { const val = t.value.trim(); if (/^#?[0-9a-fA-F]{6}$/.test(val)) { const hx = val[0] === "#" ? val : "#" + val; c.value = hx; on(hx); preview(); } });
     return el("label", { class: "f color" }, [el("span", { class: "fl" }, labelText), el("div", { class: "crow" }, [c, t])]);
   }
+  function toggle(labelText, value, on) {
+    const cb = el("input", { type: "checkbox", class: "tgl" }); cb.checked = !!value;
+    cb.addEventListener("change", () => { on(cb.checked); preview(); });
+    return el("label", { class: "tglrow" }, [cb, el("span", {}, labelText)]);
+  }
   function tools(arr, idx, rerender, min) {
     return el("div", { class: "tools" }, [
       el("button", { class: "mini", type: "button", title: "Move up", onclick: () => { if (idx > 0) { const a = arr[idx - 1]; arr[idx - 1] = arr[idx]; arr[idx] = a; rerender(); } } }, "↑"),
@@ -279,6 +286,38 @@
       text("Meta description", seo.description, v => seo.description = v, { multiline: true }),
       el("div", { class: "hint" }, "Social share image — 1200×630 recommended. Leave empty to use the default kül card."),
       imageControl(() => seo.shareImage, v => { seo.shareImage = v; }, { placeholder: "Share image" }),
+    ]));
+
+    /* ANNOUNCEMENT BAR */
+    const anno = content.announcement || (content.announcement = clone(K.DEFAULT_CONTENT.announcement));
+    f.appendChild(section("Announcement bar", "top strip", [
+      toggle("Show announcement bar", anno.on, v => { anno.on = v; }),
+      text("Message", anno.text, v => anno.text = v, { multiline: true }),
+      el("div", { class: "row2" }, [text("Link text", anno.linkText, v => anno.linkText = v), text("Link (href)", anno.link, v => anno.link = v)]),
+    ]));
+
+    /* SECTIONS & ORDER */
+    const secs = content.sections || (content.sections = clone(K.DEFAULT_CONTENT.sections));
+    const secList = el("div", {});
+    function renderSecs() {
+      secList.innerHTML = "";
+      secs.forEach((s, i) => {
+        secList.appendChild(el("div", { class: "item" }, [
+          el("div", { class: "ihead" }, [
+            el("span", { class: "ititle" }, s.label || s.key),
+            el("div", { class: "tools" }, [
+              el("button", { class: "mini", type: "button", title: "Move up", onclick: () => { if (i > 0) { const a = secs[i - 1]; secs[i - 1] = secs[i]; secs[i] = a; renderSecs(); preview(); } } }, "↑"),
+              el("button", { class: "mini", type: "button", title: "Move down", onclick: () => { if (i < secs.length - 1) { const a = secs[i + 1]; secs[i + 1] = secs[i]; secs[i] = a; renderSecs(); preview(); } } }, "↓"),
+            ]),
+          ]),
+          toggle("Show on site", s.on !== false, v => { s.on = v; }),
+        ]));
+      });
+    }
+    renderSecs();
+    f.appendChild(section("Sections & order", "show / hide / reorder", [
+      el("div", { class: "hint" }, "Toggle sections on/off and reorder them with the arrows. Hero, navigation and footer are always shown."),
+      secList,
     ]));
 
     /* BRAND + NAV */
